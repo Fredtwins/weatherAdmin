@@ -39,8 +39,7 @@
         return { 'padding-left': (row[this.levelKey] > 1 ? row[this.levelKey] * 7 : 0) + 'px' }
       },
       iconClasses (row) {
-        console.log(row.icon)
-        return [ !row.icon ? 'el-icon-caret-right' : 'el-icon-caret-bottom' ]
+        return [ !row._expanded ? 'el-icon-caret-right' : 'el-icon-caret-bottom' ]
       },
       iconStyles (row) {
         return { 'visibility': this.hasChild(row) ? 'visible' : 'hidden' }

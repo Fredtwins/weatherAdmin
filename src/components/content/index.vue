@@ -11,11 +11,7 @@
           <button class="addbtn" @click="addBtn">新增</button>
           <button class="delbtn">批量删除</button>
         </div>
-        <!-- <div class="add pull-right">
-          <Button type="primary">
-            <span class="icon-xinzeng"></span>新增</Button>
-        </div> -->
-		</Form>
+		  </Form>
       <div class="center table">
         <Table
           border

@@ -511,7 +511,8 @@ html {
             border-radius: 12px;
             .ivu-modal-header {
                 border-radius: 12px 12px 0 0; //              background: #008cee;
-                background: linear-gradient(#6bbaec, rgba(5, 123, 247, 0.76) 70%);
+                // background: linear-gradient(#6bbaec, rgba(5, 123, 247, 0.76) 70%);
+                background: #224ca5;
                 color: #fff;
                 text-align: center;
                 font-size: 14px;
@@ -528,7 +529,7 @@ html {
             }
             .ivu-modal-body {
                 padding-top: 30px;
-                height: 600px; //              overflow: auto;
+                height: 490px; //              overflow: auto;
                 li {
                     margin: 5px 0;
                     position: relative;

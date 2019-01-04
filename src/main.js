@@ -8,6 +8,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
 
+import 'base/icons'
 import 'iview/dist/styles/iview.css'
 import 'common/scss/reset.scss'
 import 'common/scss/base.scss'

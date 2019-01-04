@@ -17,14 +17,15 @@
             v-for="(item, index) in dataArr"
             :name="item.name"
             :key="item.index">
-              <template slot="title">
-                <Icon type="ios-navigate" :class="item.icon" />
-                {{item.name}}
-              </template>
-              <MenuItem
-                v-for="(i, index) in item.list"
-                :key="i.index"
-                :name="i.name">{{i.name}}</MenuItem>
+            <template slot="title">
+              <!-- <Icon type="ios-navigate" :class="item.icon" /> -->
+              <icon-svg :name="item.icon || ''"></icon-svg>
+              {{item.name}}
+            </template>
+            <MenuItem
+              v-for="(i, index) in item.list"
+              :key="i.index"
+              :name="i.name">{{i.name}}</MenuItem>
           </Submenu>
         </Menu>
       </Sider>
@@ -36,6 +37,10 @@
             :style="{margin: '0 20px',width:'24px',height:'24px',background:'#ccc'}"
             type="md-menu"
             size="24"></Icon>
+          <!-- <el-breadcrumb separator="/">
+            <el-breadcrumb-item>{{breadtitle}}</el-breadcrumb-item>
+            <el-breadcrumb-item><a href="/">{{breadcontent}}</a></el-breadcrumb-item>
+          </el-breadcrumb> -->
           <div class="adminname pull-right">{{adminname}}</div>
         </Header>
         <router-view></router-view>
@@ -55,7 +60,9 @@ export default {
       theme2: 'dark',
       adminname: '',
       menuArray: [],
-      dataArr: []
+      dataArr: [],
+      breadtitle: '',
+      breadcontent: ''
     }
   },
   computed: {
@@ -79,22 +86,20 @@ export default {
     _Getuser() {
       Getuser().then(res => {
         if (res.code === ERR_OK) {
-          // console.log(res)
           this.adminname = res.user.username
         }
       })
     },
     _GetNav() {
       GetNav().then(res => {
-        // console.log(res)
         if(res.code === ERR_OK) {
           this.dataArr = res.menuList
         }
       })
     },
     changeActive(name) {
-      console.log(name)
-      console.log('----------------------')
+      this.breadtitle = '系统设置'
+      this.breadcontent = name
       let index = this.dataArr.findIndex(item => {
         return item.name === name
       })
@@ -107,7 +112,6 @@ export default {
             }
           })
         })
-        console.log(obj.url)
         let path = `/topnav/${obj.url}`
         this.$router.push(path)
       }
@@ -176,6 +180,10 @@ export default {
   display: inline-block;
   font-size: 24px;
   padding-right: 10px;
+}
+
+.el-breadcrumb {
+  display: inline-block;
 }
 
 </style>

@@ -1,4 +1,4 @@
-import { ajaxGet } from 'api/axios'
+import { ajaxGet, ajaxPost } from 'api/axios'
 import { options } from 'api/config'
 
 export function Getuser () {
@@ -37,4 +37,15 @@ export function GetmenuList () {
   let data = {}
 
   return ajaxGet(url, data, options())
+}
+
+// 菜单列表新增
+export function GetmenuAdd (obj) {
+  let url = 'ipp/sys/permission/save'
+
+  let data = {
+    ...obj
+  }
+
+  return ajaxPost(url, data, options())
 }
