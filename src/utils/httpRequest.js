@@ -57,7 +57,6 @@ http.adornParams = (params = {}, openDefultParams = true) => {
   return openDefultParams ? merge(defaults, params) : params
 }
 http.adornParamsget = (params = {}, openDefultParams = true) => {
-
   return openDefultParams ? merge(params) : params
 }
 

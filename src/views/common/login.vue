@@ -52,7 +52,8 @@
           ],
           password: [
             { required: true, message: '密码不能为空', trigger: 'blur' }
-          ]        },
+          ]
+        },
         captchaPath: ''
       }
     },

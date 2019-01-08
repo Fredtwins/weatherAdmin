@@ -55,6 +55,10 @@
         header-align="center"
         align="center"
         label="状态">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.status === 0" size="small" type="danger">禁用</el-tag>
+          <el-tag v-else size="small">正常</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         header-align="center"
@@ -113,7 +117,7 @@
           method: 'get',
           params: this.$http.adornParamsget({
             'page': this.pageIndex,
-            'limit': this.pageSize,
+            'limit': this.pageSize
           })
         }).then(({data}) => {
           if (data && data.code === 200) {

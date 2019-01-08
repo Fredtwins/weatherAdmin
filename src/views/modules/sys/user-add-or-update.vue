@@ -115,6 +115,9 @@
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
+          console.log(data)
+          console.log('-------------')
+          console.log(this.$http())
           this.roleList = data && data.code === 200 ? data.list : []
         }).then(() => {
           this.visible = true

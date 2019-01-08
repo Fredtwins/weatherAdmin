@@ -40,7 +40,7 @@
           name: '',
           logo: '',
           description: '',
-          status: ''
+          status: 1
         },
         dataRule: {
           name: [
