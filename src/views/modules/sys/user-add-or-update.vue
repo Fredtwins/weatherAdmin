@@ -19,6 +19,17 @@
       <el-form-item label="手机号" prop="mobile">
         <el-input v-model="dataForm.mobile" placeholder="手机号"></el-input>
       </el-form-item>
+      <el-form-item label="机构" prop="organizationId">
+        <el-select v-model="dataForm.organizationId" placeholder="请选择" @change="selectNamechange">
+          <el-option
+            v-for="(item, index) in Arrayname"
+            :key="item.index"
+            :label="item.name"
+            :value="item.name"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="角色" size="mini" prop="roleIdList">
         <el-checkbox-group v-model="dataForm.roleIdList">
           <el-checkbox v-for="role in roleList" :key="role.roleId" :label="role.roleId">{{ role.roleName }}</el-checkbox>
@@ -84,8 +95,10 @@
           email: '',
           mobile: '',
           roleIdList: [],
-          status: 1
+          status: 1,
+          organizationId: ''
         },
+        Arrayname: [],
         dataRule: {
           userName: [
             { required: true, message: '用户名不能为空', trigger: 'blur' }
@@ -111,13 +124,17 @@
       init (id) {
         this.dataForm.id = id || 0
         this.$http({
+          url: this.$http.adornUrl('/sys/organization/list'),
+          methods: 'get',
+          params: this.$http.adornParams()
+        }).then(({data}) => {
+          this.Arrayname = data && data.code === 200 ? data.page.list : []
+        })
+        this.$http({
           url: this.$http.adornUrl('/sys/role/select'),
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          console.log(data)
-          console.log('-------------')
-          console.log(this.$http())
           this.roleList = data && data.code === 200 ? data.list : []
         }).then(() => {
           this.visible = true
@@ -138,10 +155,17 @@
                 this.dataForm.mobile = data.user.mobile
                 this.dataForm.roleIdList = data.user.roleIdList
                 this.dataForm.status = data.user.status
+                this.dataForm.organizationId = data.user.organizationId
               }
             })
           }
         })
+      },
+      // 选中时候触发
+      selectNamechange (val) {
+        let index = this.Arrayname.findIndex(item => item.name === val)
+        let id = this.Arrayname[index].id
+        this.dataForm.organizationId = id
       },
       // 表单提交
       dataFormSubmit () {
@@ -158,7 +182,8 @@
                 'email': this.dataForm.email,
                 'mobile': this.dataForm.mobile,
                 'status': this.dataForm.status,
-                'roleIdList': this.dataForm.roleIdList
+                'roleIdList': this.dataForm.roleIdList,
+                'organizationId': this.dataForm.organizationId
               })
             }).then(({data}) => {
               if (data && data.code === 200) {

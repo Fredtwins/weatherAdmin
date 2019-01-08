@@ -4,12 +4,12 @@
     :close-on-click-modal="false"
     :visible.sync="visible"
     width="75%">
-    <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
+    <el-form :inline="true" :model="dataForm" @keyup.enter.native="submit()">
       <el-form-item>
         <el-input v-model="dataForm.id" placeholder="任务ID" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
+        <el-button @click="submit()">查询</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -48,6 +48,7 @@
         prop="params"
         header-align="center"
         align="center"
+        :show-overflow-tooltip="true"
         label="参数">
       </el-table-column>
       <el-table-column
@@ -114,8 +115,29 @@
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
+            'limit': this.pageSize
+          })
+        }).then(({data}) => {
+          if (data && data.code === 200) {
+            this.dataList = data.page.list
+            this.totalPage = data.page.totalCount
+          } else {
+            this.dataList = []
+            this.totalPage = 0
+          }
+          this.dataListLoading = false
+        })
+      },
+      // 搜索
+      submit () {
+        this.dataListLoading = true
+        this.$http({
+          url: this.$http.adornUrl('/sys/scheduleLog/list'),
+          method: 'get',
+          params: this.$http.adornParams({
+            'page': this.pageIndex,
             'limit': this.pageSize,
-            'jobId': this.dataForm.id
+            'jobId': this.dataForm.id + '¦$¦like'
           })
         }).then(({data}) => {
           if (data && data.code === 200) {

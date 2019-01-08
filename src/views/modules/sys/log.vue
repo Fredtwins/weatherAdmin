@@ -1,11 +1,14 @@
 <template>
   <div class="mod-log">
-    <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
+    <el-form :inline="true" :model="dataForm" @keyup.enter.native="submitSearch()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="用户名／用户操作" clearable></el-input>
+        <el-input v-model="dataForm.username" placeholder="用户名" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
+        <el-input v-model="dataForm.operation" placeholder="用户操作" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="submitSearch()">查询</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -86,7 +89,8 @@
     data () {
       return {
         dataForm: {
-          key: ''
+          username: '',
+          operation: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -108,8 +112,30 @@
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
+            'limit': this.pageSize
+          })
+        }).then(({data}) => {
+          if (data && data.code === 200) {
+            this.dataList = data.page.list
+            this.totalPage = data.page.totalCount
+          } else {
+            this.dataList = []
+            this.totalPage = 0
+          }
+          this.dataListLoading = false
+        })
+      },
+      // 搜索按钮
+      submitSearch () {
+        this.dataListLoading = true
+        this.$http({
+          url: this.$http.adornUrl('/sys/log/list'),
+          method: 'get',
+          params: this.$http.adornParams({
+            'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key
+            'username': this.dataForm.username + '¦$¦like',
+            'operation': this.dataForm.operation + '¦$¦like'
           })
         }).then(({data}) => {
           if (data && data.code === 200) {
