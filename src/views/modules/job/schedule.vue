@@ -22,50 +22,42 @@
       style="width: 100%;">
       <el-table-column
         type="selection"
-        header-align="center"
         align="center"
         width="50">
       </el-table-column>
       <el-table-column
         prop="jobId"
-        header-align="center"
         align="center"
         width="80"
         label="ID">
       </el-table-column>
       <el-table-column
         prop="beanName"
-        header-align="center"
         align="center"
         label="bean名称">
       </el-table-column>
       <el-table-column
         prop="methodName"
-        header-align="center"
         align="center"
         label="方法名称">
       </el-table-column>
       <el-table-column
         prop="params"
-        header-align="center"
         align="center"
         label="参数">
       </el-table-column>
       <el-table-column
         prop="cronExpression"
-        header-align="center"
         align="center"
         label="cron表达式">
       </el-table-column>
       <el-table-column
         prop="remark"
-        header-align="center"
         align="center"
         label="备注">
       </el-table-column>
       <el-table-column
         prop="status"
-        header-align="center"
         align="center"
         label="状态">
         <template slot-scope="scope">
@@ -74,8 +66,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        fixed="right"
-        header-align="center"
         align="center"
         width="150"
         label="操作">
@@ -143,6 +133,7 @@
             'beanName': this.dataForm.beanName
           })
         }).then(({data}) => {
+          console.log(data)
           if (data && data.code === 200) {
             this.dataList = data.page.list
             this.totalPage = data.page.totalCount

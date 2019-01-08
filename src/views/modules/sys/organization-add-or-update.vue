@@ -4,18 +4,24 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="名称" prop="name">
-      <el-input v-model="dataForm.name" placeholder="名称"></el-input>
-    </el-form-item>
-    <el-form-item label="logo地址" prop="logo">
-      <el-input v-model="dataForm.logo" placeholder="logo地址"></el-input>
-    </el-form-item>
-    <el-form-item label="描述" prop="description">
-      <el-input v-model="dataForm.description" placeholder="描述"></el-input>
-    </el-form-item>
-    <el-form-item label="状态" prop="status">
-      <el-input v-model="dataForm.status" placeholder="状态  0：禁用   1：正常"></el-input>
-    </el-form-item>
+      <el-form-item label="名称" prop="name">
+        <el-input v-model="dataForm.name" placeholder="名称"></el-input>
+      </el-form-item>
+      <el-form-item label="logo地址" prop="logo">
+        <el-input v-model="dataForm.logo" placeholder="logo地址"></el-input>
+      </el-form-item>
+      <el-form-item label="描述" prop="description">
+        <el-input v-model="dataForm.description" placeholder="描述"></el-input>
+      </el-form-item>
+      <!-- <el-form-item label="状态" prop="status">
+        <el-input v-model="dataForm.status" placeholder="状态  0：禁用   1：正常"></el-input>
+      </el-form-item> -->
+      <el-form-item label="状态" size="mini" prop="status">
+        <el-radio-group v-model="dataForm.status">
+          <el-radio :label="0">禁用</el-radio>
+          <el-radio :label="1">正常</el-radio>
+        </el-radio-group>
+      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>

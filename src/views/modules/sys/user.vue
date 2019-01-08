@@ -1,11 +1,11 @@
 <template>
   <div class="mod-user">
-    <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
+    <el-form :inline="true" :model="dataForm" @keyup.enter.native="submitSearch()">
       <el-form-item>
         <el-input v-model="dataForm.userName" placeholder="用户名" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
+        <el-button @click="submitSearch()">查询</el-button>
         <el-button v-if="isAuth('sys:user:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button v-if="isAuth('sys:user:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
@@ -125,7 +125,27 @@
             'limit': this.pageSize
           })
         }).then(({data}) => {
-          console.log(data)
+          if (data && data.code === 200) {
+            this.dataList = data.page.list
+            this.totalPage = data.page.totalCount
+          } else {
+            this.dataList = []
+            this.totalPage = 0
+          }
+          this.dataListLoading = false
+        })
+      },
+      submitSearch () {
+        this.dataListLoading = true
+        this.$http({
+          url: this.$http.adornUrl('/sys/user/list'),
+          method: 'get',
+          params: this.$http.adornParamsget({
+            'page': this.pageIndex,
+            'limit': this.pageSize,
+            'userName': this.dataForm.userName + '¦$¦like'
+          })
+        }).then(({data}) => {
           if (data && data.code === 200) {
             this.dataList = data.page.list
             this.totalPage = data.page.totalCount
