@@ -1,18 +1,10 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+  <transition name="fade">
+    <router-view></router-view>
+  </transition>
 </template>
 
 <script>
-export default {
-  name: 'App'
-}
+  export default {
+  }
 </script>
-
-<style>
-	#app {
-		width: 100%;
-		height: 100%;
-	}
-</style>
