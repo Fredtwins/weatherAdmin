@@ -2,16 +2,12 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="submitSearch()">
       <el-form-item>
-        <el-input v-model="dataForm.name" placeholder="名称" clearable></el-input>
+        <el-input v-model="dataForm.tablename" placeholder="表名" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="submitSearch()">查询</el-button>
         <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button
-          type="danger"
-          :disabled="dataListSelections.length <= 0"
-          @click="deleteHandle()"
-        >批量删除</el-button>
+        <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -33,57 +29,62 @@
         label="编号">
       </el-table-column>
       <el-table-column
-        prop="code"
+        prop="database"
         header-align="center"
         align="center"
-        label="代码">
+        label="数据库">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="tablename"
         header-align="center"
         align="center"
-        label="名称">
+        label="表名">
       </el-table-column>
       <el-table-column
-        prop="sort"
+        prop="field"
         header-align="center"
         align="center"
-        label="排序">
+        label="字段">
       </el-table-column>
       <el-table-column
-        prop="type"
+        prop="storageTime"
         header-align="center"
         align="center"
-        label="类型">
-      </el-table-column>
-      <el-table-column
-        prop="createtime"
-        header-align="center"
-        align="center"
-        label="创建时间">
-      </el-table-column>
-      <el-table-column
-        prop="updatetime"
-        header-align="center"
-        align="center"
-        label="更新时间">
+        label="保存时长（分）">
       </el-table-column>
       <el-table-column
         prop="status"
         header-align="center"
         align="center"
-        label="标记号">
+        label="状态">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === 0" size="small" type="danger">无效</el-tag>
-          <el-tag v-else size="small">有效</el-tag>
+          <el-tag v-if="scope.row.status === 0" size="small" type="danger">禁用</el-tag>
+          <el-tag v-if="scope.row.status === 1" size="small">正常</el-tag>
         </template>
       </el-table-column>
       <el-table-column
         prop="description"
         header-align="center"
         align="center"
-        :show-overflow-tooltip="true"
         label="描述">
+      </el-table-column>
+      <el-table-column
+        prop="createTime"
+        header-align="center"
+        align="center"
+        label="创建时间">
+      </el-table-column>
+      <el-table-column
+        prop="objectType"
+        header-align="center"
+        align="center"
+        label="对象类型">
+      </el-table-column>
+      <el-table-column
+        prop="filePath"
+        header-align="center"
+        align="center"
+        label="文件路径">
       </el-table-column>
       <el-table-column
         header-align="center"
@@ -111,12 +112,12 @@
 </template>
 
 <script>
-  import AddOrUpdate from './dictionary-add-or-update'
+  import AddOrUpdate from './dataclean-add-or-update'
   export default {
     data () {
       return {
         dataForm: {
-          name: ''
+          tablename: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -138,7 +139,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/sys/dictionary/list'),
+          url: this.$http.adornUrl('/sys/dataClean/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
@@ -159,12 +160,12 @@
       submitSearch () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/sys/dictionary/list'),
+          url: this.$http.adornUrl('/sys/dataClean/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'name': this.dataForm.name + '¦$¦like'
+            'tablename': this.dataForm.tablename
           })
         }).then(({data}) => {
           if (data && data.code === 200) {
@@ -194,7 +195,6 @@
       },
       // 新增 / 修改
       addOrUpdateHandle (id) {
-        console.log(id)
         this.addOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init(id)
@@ -211,7 +211,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/sys/dictionary/delete'),
+            url: this.$http.adornUrl('/sys/dataClean/delete'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {

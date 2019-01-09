@@ -3,6 +3,10 @@ import App from '@/App'
 import router from '@/router'                 // api: https://github.com/vuejs/vue-router
 import store from '@/store'                   // api: https://github.com/vuejs/vuex
 import VueCookie from 'vue-cookie'            // api: https://github.com/alfhen/vue-cookie
+import vueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 import '@/element-ui'                         // api: https://github.com/ElemeFE/element
 import '@/icons'                              // api: http://www.iconfont.cn/
 import '@/element-ui-theme'
@@ -12,6 +16,8 @@ import { isAuth } from '@/utils'
 import cloneDeep from 'lodash/cloneDeep'
 
 Vue.use(VueCookie)
+Vue.use(vueQuillEditor)
+console.log(vueQuillEditor)
 Vue.config.productionTip = false
 
 // 非生产环境, 适配mockjs模拟数据                 // api: https://github.com/nuysoft/Mock
