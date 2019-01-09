@@ -2,12 +2,16 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="submitSearch()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.name" placeholder="名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="submitSearch()">查询</el-button>
-        <el-button v-if="isAuth('sys:dictionary:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('sys:dictionary:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button
+          type="danger"
+          :disabled="dataListSelections.length <= 0"
+          @click="deleteHandle()"
+        >批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -69,15 +73,19 @@
         header-align="center"
         align="center"
         label="标记号（0：无效 1： 有效，默认有效）">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.status === 0" size="small" type="danger">无效</el-tag>
+          <el-tag v-else size="small">有效</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="description"
         header-align="center"
         align="center"
+        :show-overflow-tooltip="true"
         label="描述">
       </el-table-column>
       <el-table-column
-        fixed="right"
         header-align="center"
         align="center"
         width="150"
@@ -108,7 +116,7 @@
     data () {
       return {
         dataForm: {
-          key: ''
+          name: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -156,7 +164,7 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key + '¦$¦like'
+            'name': this.dataForm.name + '¦$¦like'
           })
         }).then(({data}) => {
           if (data && data.code === 200) {
@@ -186,6 +194,7 @@
       },
       // 新增 / 修改
       addOrUpdateHandle (id) {
+        console.log(id)
         this.addOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init(id)

@@ -1,11 +1,11 @@
 <template>
   <div class="mod-config">
-    <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
+    <el-form :inline="true" :model="dataForm" @keyup.enter.native="submitSearch()">
       <el-form-item>
         <el-input v-model="dataForm.paramKey" placeholder="参数名" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
+        <el-button @click="submitSearch()">查询</el-button>
         <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
@@ -39,6 +39,7 @@
         prop="paramValue"
         header-align="center"
         align="center"
+        :show-overflow-tooltip="true"
         label="参数值">
       </el-table-column>
       <el-table-column
@@ -105,8 +106,29 @@
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
+            'limit': this.pageSize
+          })
+        }).then(({data}) => {
+          if (data && data.code === 200) {
+            this.dataList = data.page.list
+            this.totalPage = data.page.totalCount
+          } else {
+            this.dataList = []
+            this.totalPage = 0
+          }
+          this.dataListLoading = false
+        })
+      },
+      // 搜索
+      submitSearch () {
+        this.dataListLoading = true
+        this.$http({
+          url: this.$http.adornUrl('/sys/config/list'),
+          method: 'get',
+          params: this.$http.adornParams({
+            'page': this.pageIndex,
             'limit': this.pageSize,
-            'paramKey': this.dataForm.paramKey
+            'paramKey': this.dataForm.paramKey + '¦$¦like'
           })
         }).then(({data}) => {
           if (data && data.code === 200) {

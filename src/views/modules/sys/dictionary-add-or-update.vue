@@ -16,14 +16,12 @@
     <el-form-item label="类型" prop="type">
       <el-input v-model="dataForm.type" placeholder="类型"></el-input>
     </el-form-item>
-    <el-form-item label="创建时间" prop="createtime">
-      <el-input v-model="dataForm.createtime" placeholder="创建时间"></el-input>
-    </el-form-item>
-    <el-form-item label="更新时间" prop="updatetime">
-      <el-input v-model="dataForm.updatetime" placeholder="更新时间"></el-input>
-    </el-form-item>
-    <el-form-item label="标记号（0：无效 1： 有效，默认有效）" prop="status">
-      <el-input v-model="dataForm.status" placeholder="标记号（0：无效 1： 有效，默认有效）"></el-input>
+    <el-form-item label="标记号" prop="status">
+      <!-- <el-input v-model="dataForm.status" placeholder="标记号（0：无效 1： 有效，默认有效）"></el-input> -->
+      <el-radio-group v-model="dataForm.status">
+        <el-radio :label="0">无效</el-radio>
+        <el-radio :label="1">有效</el-radio>
+      </el-radio-group>
     </el-form-item>
     <el-form-item label="描述" prop="description">
       <el-input v-model="dataForm.description" placeholder="描述"></el-input>
@@ -49,7 +47,7 @@
           type: '',
           createtime: '',
           updatetime: '',
-          status: '',
+          status: 1,
           description: ''
         },
         dataRule: {
