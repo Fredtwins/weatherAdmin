@@ -72,7 +72,7 @@
         prop="status"
         header-align="center"
         align="center"
-        label="标记号">
+        label="状态">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status === 0" size="small" type="danger">无效</el-tag>
           <el-tag v-else size="small">有效</el-tag>
