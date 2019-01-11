@@ -131,35 +131,40 @@
       // 搜索
       submit () {
         this.dataListLoading = true
-        this.$http({
-          url: this.$http.adornUrl('/sys/scheduleLog/list'),
-          method: 'get',
-          params: this.$http.adornParams({
-            'page': this.pageIndex,
-            'limit': this.pageSize,
-            'jobId': this.dataForm.id + '¦$¦like'
+        if (this.dataForm.id === '') {
+          this.getDataList()
+        } else {
+          this.$http({
+            url: this.$http.adornUrl('/sys/scheduleLog/list'),
+            method: 'get',
+            params: this.$http.adornParams({
+              'page': this.pageIndex,
+              'limit': this.pageSize,
+              'jobId': this.dataForm.id + '¦$¦like'
+            })
+          }).then(({data}) => {
+            if (data && data.code === 200) {
+              this.dataList = data.page.list
+              this.totalPage = data.page.totalCount
+            } else {
+              this.dataList = []
+              this.totalPage = 0
+            }
+            this.dataListLoading = false
           })
-        }).then(({data}) => {
-          if (data && data.code === 200) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
-          } else {
-            this.dataList = []
-            this.totalPage = 0
-          }
-          this.dataListLoading = false
-        })
+        }
       },
       // 每页数
       sizeChangeHandle (val) {
         this.pageSize = val
         this.pageIndex = 1
-        this.getDataList()
+        this.submit()
       },
       // 当前页
       currentChangeHandle (val) {
         this.pageIndex = val
-        this.getDataList()
+        this.submit()
+        // this.pageIndex = 1
       },
       // 失败信息
       showErrorInfo (id) {
