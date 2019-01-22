@@ -2,7 +2,7 @@
   <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
     <div class="site-navbar__header">
       <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
-        <a class="site-navbar__brand-lg" href="javascript:;">佛山气象后台系统</a>
+        <a class="site-navbar__brand-lg" href="javascript:;">气象公共服务平台</a>
         <a class="site-navbar__brand-mini" href="javascript:;"></a>
       </h1>
     </div>

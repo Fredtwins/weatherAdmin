@@ -57,8 +57,8 @@
         align="center"
         label="状态">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === 0" size="small">成功</el-tag>
-          <el-tag v-else @click.native="showErrorInfo(scope.row.logId)" size="small" type="danger" style="cursor: pointer;">失败</el-tag>
+          <el-tag v-if="scope.row.status === 0" size="small" type="danger">失败</el-tag>
+          <el-tag v-else @click.native="showErrorInfo(scope.row.logId)" size="small" style="cursor: pointer;">成功</el-tag>
         </template>
       </el-table-column>
       <el-table-column
