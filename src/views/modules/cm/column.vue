@@ -44,13 +44,26 @@
         prop="jumpType"
         header-align="center"
         align="center"
-        label="跳转类型 1 普通目录 2 a标签 3 a标签_blank 4 直接加载url信息">
+        label="跳转类型">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.type === 1" size="small" type="danger">普通目录</el-tag>
+          <el-tag v-if="scope.row.type === 2" size="small" type="danger">a标签</el-tag>
+          <el-tag v-if="scope.row.type === 3" size="small" type="danger">a标签_blank</el-tag>
+          <el-tag v-if="scope.row.type === 4" size="small" type="danger">直接加载url信息</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="type"
         header-align="center"
         align="center"
-        label="类型 1 栏目 2 文章 3 图片 4 视频 5 其它">
+        label="类型">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.type === 1" size="small" type="danger">栏目</el-tag>
+          <el-tag v-if="scope.row.type === 2" size="small" type="danger">文章</el-tag>
+          <el-tag v-if="scope.row.type === 3" size="small" type="danger">图片</el-tag>
+          <el-tag v-if="scope.row.type === 4" size="small" type="danger">视频</el-tag>
+          <el-tag v-if="scope.row.type === 5" size="small" type="danger">其它</el-tag>
+        </template>
       </el-table-column>
       <!-- <el-table-column
         prop="alias"
@@ -190,18 +203,17 @@
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
-            'limit': this.pageSize,
-            'key': this.dataForm.key
+            'limit': this.pageSize
           })
         }).then(({data}) => {
           if (data && data.code === 200) {
+            this.dataListLoading = false
             this.dataList = data.page.list
             this.totalPage = data.page.totalCount
           } else {
             this.dataList = []
             this.totalPage = 0
           }
-          this.dataListLoading = false
         })
       },
       // 每页数

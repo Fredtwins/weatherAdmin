@@ -4,70 +4,71 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="父栏目编号" prop="parentId">
-      <el-popover
-        ref="menuListPopover"
-        placement="bottom-start"
-        trigger="click">
-        <el-tree
-          :data="menuList"
-          :props="menuListTreeProps"
-          node-key="menuId"
-          ref="menuListTree"
-          @current-change="menuListTreeCurrentChangeHandle"
-          :default-expand-all="true"
-          :highlight-current="true"
-          :expand-on-click-node="false">
-        </el-tree>
-      </el-popover>
-      <el-input v-model="dataForm.parentId" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单" class="menu-list__input"></el-input>
+      <el-form-item label="上级栏目" prop="parentName">
+        <el-popover
+          ref="menuListPopover"
+          placement="bottom-start"
+          trigger="click">
+          <el-tree
+            :data="menuList"
+            :props="menuListTreeProps"
+            node-key="menuId"
+            ref="menuListTree"
+            @current-change="menuListTreeCurrentChangeHandle"
+            :default-expand-all="true"
+            :highlight-current="true"
+            :expand-on-click-node="false">
+          </el-tree>
+        </el-popover>
+        <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单" class="menu-list__input"></el-input>
       <!-- <el-input v-model="dataForm.parentId" placeholder="父栏目编号"></el-input> -->
-    </el-form-item>
-    <el-form-item label="栏目名称" prop="name">
-      <el-input v-model="dataForm.name" placeholder="栏目名称"></el-input>
-    </el-form-item>
-    <el-form-item label="别名（若name是中文则值为其拼音，否则同name）" prop="alias">
-      <el-input v-model="dataForm.alias" placeholder="别名（若name是中文则值为其拼音，否则同name）"></el-input>
-    </el-form-item>
-    <el-form-item label="模板路径" prop="modelPath">
-      <el-input v-model="dataForm.modelPath" placeholder="模板路径"></el-input>
-    </el-form-item>
-    <el-form-item label="描述" prop="description">
-      <el-input v-model="dataForm.description" placeholder="描述"></el-input>
-    </el-form-item>
-    <el-form-item label="排序" prop="sort">
-      <el-input v-model="dataForm.sort" placeholder="排序"></el-input>
-    </el-form-item>
-    <el-form-item label="状态  0：禁用   1：正常" prop="status">
-      <el-input v-model="dataForm.status" placeholder="状态  0：禁用   1：正常"></el-input>
-    </el-form-item>
-    <el-form-item label="跳转类型 1 普通目录 2 a标签 3 a标签_blank 4 直接加载url信息" prop="jumpType">
-      <el-input v-model="dataForm.jumpType" placeholder="跳转类型 1 普通目录 2 a标签 3 a标签_blank 4 直接加载url信息"></el-input>
-    </el-form-item>
-    <el-form-item label="跳转地址" prop="jumpUrl">
-      <el-input v-model="dataForm.jumpUrl" placeholder="跳转地址"></el-input>
-    </el-form-item>
-    <el-form-item label="菜单URL" prop="url">
-      <el-input v-model="dataForm.url" placeholder="菜单URL"></el-input>
-    </el-form-item>
-    <el-form-item label="网站编号" prop="siteId">
-      <el-input v-model="dataForm.siteId" placeholder="网站编号"></el-input>
-    </el-form-item>
-    <el-form-item label="创建时间" prop="createTime">
-      <el-input v-model="dataForm.createTime" placeholder="创建时间"></el-input>
-    </el-form-item>
-    <el-form-item label="更新时间" prop="updateTime">
-      <el-input v-model="dataForm.updateTime" placeholder="更新时间"></el-input>
-    </el-form-item>
-    <el-form-item label="创建者编号" prop="createUserId">
-      <el-input v-model="dataForm.createUserId" placeholder="创建者编号"></el-input>
-    </el-form-item>
-    <el-form-item label="修改者编号" prop="updateUserId">
-      <el-input v-model="dataForm.updateUserId" placeholder="修改者编号"></el-input>
-    </el-form-item>
-    <el-form-item label="类型 1 栏目 2 文章 3 图片 4 视频 5 其它" prop="type">
-      <el-input v-model="dataForm.type" placeholder="类型 1 栏目 2 文章 3 图片 4 视频 5 其它"></el-input>
-    </el-form-item>
+      </el-form-item>
+      <el-form-item label="栏目名称" prop="name">
+        <el-input v-model="dataForm.name" placeholder="栏目名称"></el-input>
+      </el-form-item>
+      <el-form-item label="模板路径" prop="modelPath">
+        <el-input v-model="dataForm.modelPath" placeholder="模板路径"></el-input>
+      </el-form-item>
+      <el-form-item label="排序" prop="sort">
+        <el-input v-model="dataForm.sort" placeholder="排序"></el-input>
+      </el-form-item>
+      <el-form-item label="跳转类型" prop="jumpType">
+        <el-radio-group v-model="dataForm.jumpType">
+          <el-radio :label="1">普通目录</el-radio>
+          <el-radio :label="2">a标签</el-radio>
+          <el-radio :label="3">a标签_blank</el-radio>
+          <el-radio :label="4">直接加载url信息</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="类型" prop="type">
+        <el-radio-group v-model="dataForm.type">
+          <el-radio :label="1">栏目</el-radio>
+          <el-radio :label="2">文章</el-radio>
+          <el-radio :label="3">图片</el-radio>
+          <el-radio :label="4">视频</el-radio>
+          <el-radio :label="5">其它</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="跳转地址" prop="jumpUrl">
+        <el-input v-model="dataForm.jumpUrl" placeholder="跳转地址"></el-input>
+      </el-form-item>
+      <el-form-item label="菜单地址" prop="url">
+        <el-input v-model="dataForm.url" placeholder="菜单URL"></el-input>
+      </el-form-item>
+      <el-form-item label="所属网站" prop="siteId">
+        <el-input v-model="dataForm.siteId" placeholder="网站编号"></el-input>
+      </el-form-item>
+      <el-form-item label="描述" prop="description">
+        <el-input v-model="dataForm.description" placeholder="描述"></el-input>
+      </el-form-item>
+
+      <el-form-item label="状态" prop="status">
+        <!-- <el-input v-model="dataForm.status" placeholder="状态  0：禁用   1：正常"></el-input> -->
+        <el-radio-group v-model="dataForm.status">
+          <el-radio :label="0">禁用</el-radio>
+          <el-radio :label="1">正常</el-radio>
+        </el-radio-group>
+      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -86,13 +87,14 @@
         dataForm: {
           id: 0,
           parentId: '',
+          parentName: '',
           name: '',
           alias: '',
           modelPath: '',
           description: '',
           sort: '',
-          status: '',
-          jumpType: '',
+          status: 1,
+          jumpType: 1,
           jumpUrl: '',
           url: '',
           siteId: '',
@@ -100,7 +102,11 @@
           updateTime: '',
           createUserId: '',
           updateUserId: '',
-          type: ''
+          type: 1
+        },
+        menuListTreeProps: {
+          label: 'name',
+          children: 'children'
         },
         menuList: [],
         dataRule: {
@@ -158,36 +164,56 @@
     methods: {
       init (id) {
         this.dataForm.id = id || 0
-        this.visible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].resetFields()
-          if (this.dataForm.id) {
-            this.$http({
-              url: this.$http.adornUrl(`/cm/column/info/${this.dataForm.id}`),
-              method: 'get',
-              params: this.$http.adornParams()
-            }).then(({data}) => {
-              if (data && data.code === 200) {
-                this.dataForm.parentId = data.column.parentId
-                this.dataForm.name = data.column.name
-                this.dataForm.alias = data.column.alias
-                this.dataForm.modelPath = data.column.modelPath
-                this.dataForm.description = data.column.description
-                this.dataForm.sort = data.column.sort
-                this.dataForm.status = data.column.status
-                this.dataForm.jumpType = data.column.jumpType
-                this.dataForm.jumpUrl = data.column.jumpUrl
-                this.dataForm.url = data.column.url
-                this.dataForm.siteId = data.column.siteId
-                this.dataForm.createTime = data.column.createTime
-                this.dataForm.updateTime = data.column.updateTime
-                this.dataForm.createUserId = data.column.createUserId
-                this.dataForm.updateUserId = data.column.updateUserId
-                this.dataForm.type = data.column.type
-              }
-            })
+        this.$http({
+          url: this.$http.adornUrl('/sys/menu/select'),
+          method: 'get',
+          params: this.$http.adornParams()
+        }).then(({data}) => {
+          this.menuList = treeDataTranslate(data.menuList, 'menuId')
+        }).then(() => {
+          this.visible = true
+          this.$nextTick(() => {
+            this.$refs['dataForm'].resetFields()
+          })
+        }).then(() => {
+          if (!this.dataForm.id) {
+            // 新增
+            this.menuListTreeSetCurrentNode()
+          } else {
+            if (this.dataForm.id) {
+              this.$http({
+                url: this.$http.adornUrl(`/cm/column/info/${this.dataForm.id}`),
+                method: 'get',
+                params: this.$http.adornParams()
+              }).then(({data}) => {
+                if (data && data.code === 200) {
+                  this.dataForm.parentId = data.column.parentId
+                  this.dataForm.name = data.column.name
+                  this.dataForm.modelPath = data.column.modelPath
+                  this.dataForm.description = data.column.description
+                  this.dataForm.sort = data.column.sort
+                  this.dataForm.status = data.column.status
+                  this.dataForm.jumpType = data.column.jumpType
+                  this.dataForm.jumpUrl = data.column.jumpUrl
+                  this.dataForm.url = data.column.url
+                  this.dataForm.siteId = data.column.siteId
+                  this.dataForm.type = data.column.type
+                  this.menuListTreeSetCurrentNode()
+                }
+              })
+            }
           }
         })
+      },
+      // 菜单树选中
+      menuListTreeCurrentChangeHandle (data, node) {
+        this.dataForm.parentId = data.menuId
+        this.dataForm.parentName = data.name
+      },
+      // 菜单树设置当前选中节点
+      menuListTreeSetCurrentNode () {
+        this.$refs.menuListTree.setCurrentKey(this.dataForm.parentId)
+        this.dataForm.parentName = (this.$refs.menuListTree.getCurrentNode() || {})['name']
       },
       // 表单提交
       dataFormSubmit () {
@@ -200,7 +226,6 @@
                 'id': this.dataForm.id || undefined,
                 'parentId': this.dataForm.parentId,
                 'name': this.dataForm.name,
-                'alias': this.dataForm.alias,
                 'modelPath': this.dataForm.modelPath,
                 'description': this.dataForm.description,
                 'sort': this.dataForm.sort,
@@ -209,10 +234,6 @@
                 'jumpUrl': this.dataForm.jumpUrl,
                 'url': this.dataForm.url,
                 'siteId': this.dataForm.siteId,
-                'createTime': this.dataForm.createTime,
-                'updateTime': this.dataForm.updateTime,
-                'createUserId': this.dataForm.createUserId,
-                'updateUserId': this.dataForm.updateUserId,
                 'type': this.dataForm.type
               })
             }).then(({data}) => {
