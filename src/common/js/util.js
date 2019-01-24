@@ -36,7 +36,6 @@ export function setAction (obj) {
 // 删除当前用户本地存储信息
 export function removeAction () {
   return removeLocalStorage(actionName)
-  console.log(actionName)
 }
 
 // 初始化时间

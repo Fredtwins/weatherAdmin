@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('cm:article:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('cm:article:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -29,22 +29,29 @@
         label="编号">
       </el-table-column>
       <el-table-column
-        prop="columnId"
+        prop="columnName"
         header-align="center"
         align="center"
-        label="栏目编号">
+        label="所属栏目">
       </el-table-column>
       <el-table-column
         prop="title"
         header-align="center"
         align="center"
+        :show-overflow-tooltip="true"
         label="标题">
       </el-table-column>
       <el-table-column
-        prop="content"
+        prop="publishtime"
         header-align="center"
         align="center"
-        label="内容">
+        label="发表时间">
+      </el-table-column>
+      <el-table-column
+        prop="publisher"
+        header-align="center"
+        align="center"
+        label="发表者">
       </el-table-column>
       <el-table-column
         prop="browseNum"
@@ -63,18 +70,6 @@
         header-align="center"
         align="center"
         label="被赞次数">
-      </el-table-column>
-      <el-table-column
-        prop="status"
-        header-align="center"
-        align="center"
-        label="状态  0：禁用   1：正常">
-      </el-table-column>
-      <el-table-column
-        prop="sort"
-        header-align="center"
-        align="center"
-        label="排序">
       </el-table-column>
       <el-table-column
         prop="jumpUrl"
@@ -101,40 +96,20 @@
         label="描述">
       </el-table-column>
       <el-table-column
-        prop="publishtime"
+        prop="status"
         header-align="center"
         align="center"
-        label="发表时间">
+        label="状态">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.status === 0" size="small" type="danger">禁用</el-tag>
+          <el-tag v-else size="small">正常</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
-        prop="publisher"
+        prop="createUser"
         header-align="center"
         align="center"
-        label="发表者">
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        header-align="center"
-        align="center"
-        label="创建时间">
-      </el-table-column>
-      <el-table-column
-        prop="createUserId"
-        header-align="center"
-        align="center"
-        label="创建者编号">
-      </el-table-column>
-      <el-table-column
-        prop="updateTime"
-        header-align="center"
-        align="center"
-        label="更新时间">
-      </el-table-column>
-      <el-table-column
-        prop="updateUserId"
-        header-align="center"
-        align="center"
-        label="修改者编号">
+        label="创建者">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -194,8 +169,7 @@
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
-            'limit': this.pageSize,
-            'key': this.dataForm.key
+            'limit': this.pageSize
           })
         }).then(({data}) => {
           if (data && data.code === 200) {

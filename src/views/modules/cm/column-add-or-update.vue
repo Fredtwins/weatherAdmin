@@ -3,33 +3,35 @@
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-      <el-form-item label="上级栏目" prop="parentName">
-        <el-popover
-          ref="menuListPopover"
-          placement="bottom-start"
-          trigger="click">
-          <el-tree
-            :data="menuList"
-            :props="menuListTreeProps"
-            node-key="menuId"
-            ref="menuListTree"
-            @current-change="menuListTreeCurrentChangeHandle"
-            :default-expand-all="true"
-            :highlight-current="true"
-            :expand-on-click-node="false">
-          </el-tree>
-        </el-popover>
-        <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单" class="menu-list__input"></el-input>
-      <!-- <el-input v-model="dataForm.parentId" placeholder="父栏目编号"></el-input> -->
-      </el-form-item>
-      <el-form-item label="栏目名称" prop="name">
-        <el-input v-model="dataForm.name" placeholder="栏目名称"></el-input>
-      </el-form-item>
-      <el-form-item label="模板路径" prop="modelPath">
+    <el-form :inline="true" :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+      <div>
+        <el-form-item label="上级栏目" prop="parentName">
+          <el-popover
+            ref="menuListPopover"
+            placement="bottom-start"
+            trigger="click">
+            <el-tree
+              :data="menuList"
+              :props="menuListTreeProps"
+              node-key="id"
+              ref="menuListTree"
+              @current-change="menuListTreeCurrentChangeHandle"
+              :default-expand-all="true"
+              :highlight-current="true"
+              :expand-on-click-node="false">
+            </el-tree>
+          </el-popover>
+          <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单" class="menu-list__input"></el-input>
+        <!-- <el-input v-model="dataForm.parentId" placeholder="父栏目编号"></el-input> -->
+        </el-form-item>
+        <el-form-item label="栏目名称" prop="name">
+          <el-input v-model="dataForm.name" placeholder="栏目名称"></el-input>
+        </el-form-item>
+      </div>
+      <el-form-item label="模板路径">
         <el-input v-model="dataForm.modelPath" placeholder="模板路径"></el-input>
       </el-form-item>
-      <el-form-item label="排序" prop="sort">
+      <el-form-item label="排序">
         <el-input v-model="dataForm.sort" placeholder="排序"></el-input>
       </el-form-item>
       <el-form-item label="跳转类型" prop="jumpType">
@@ -49,21 +51,21 @@
           <el-radio :label="5">其它</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="跳转地址" prop="jumpUrl">
+    </el-form>
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+      <el-form-item label="跳转地址">
         <el-input v-model="dataForm.jumpUrl" placeholder="跳转地址"></el-input>
       </el-form-item>
-      <el-form-item label="菜单地址" prop="url">
+      <el-form-item label="菜单地址">
         <el-input v-model="dataForm.url" placeholder="菜单URL"></el-input>
       </el-form-item>
-      <el-form-item label="所属网站" prop="siteId">
+      <el-form-item label="所属网站">
         <el-input v-model="dataForm.siteId" placeholder="网站编号"></el-input>
       </el-form-item>
-      <el-form-item label="描述" prop="description">
+      <el-form-item label="描述">
         <el-input v-model="dataForm.description" placeholder="描述"></el-input>
       </el-form-item>
-
       <el-form-item label="状态" prop="status">
-        <!-- <el-input v-model="dataForm.status" placeholder="状态  0：禁用   1：正常"></el-input> -->
         <el-radio-group v-model="dataForm.status">
           <el-radio :label="0">禁用</el-radio>
           <el-radio :label="1">正常</el-radio>
@@ -110,8 +112,8 @@
         },
         menuList: [],
         dataRule: {
-          parentId: [
-            { required: true, message: '父栏目编号不能为空', trigger: 'blur' }
+          parentName: [
+            { required: true, message: '上级栏目不能为空', trigger: 'change' }
           ],
           name: [
             { required: true, message: '栏目名称不能为空', trigger: 'blur' }
@@ -143,18 +145,6 @@
           siteId: [
             { required: true, message: '网站编号不能为空', trigger: 'blur' }
           ],
-          createTime: [
-            { required: true, message: '创建时间不能为空', trigger: 'blur' }
-          ],
-          updateTime: [
-            { required: true, message: '更新时间不能为空', trigger: 'blur' }
-          ],
-          createUserId: [
-            { required: true, message: '创建者编号不能为空', trigger: 'blur' }
-          ],
-          updateUserId: [
-            { required: true, message: '修改者编号不能为空', trigger: 'blur' }
-          ],
           type: [
             { required: true, message: '类型 1 栏目 2 文章 3 图片 4 视频 5 其它不能为空', trigger: 'blur' }
           ]
@@ -165,20 +155,21 @@
       init (id) {
         this.dataForm.id = id || 0
         this.$http({
-          url: this.$http.adornUrl('/sys/menu/select'),
+          url: this.$http.adornUrl('/cm/column/select'),
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          this.menuList = treeDataTranslate(data.menuList, 'menuId')
+          this.menuList = treeDataTranslate(data.columnList, 'id')
         }).then(() => {
           this.visible = true
           this.$nextTick(() => {
             this.$refs['dataForm'].resetFields()
           })
-        }).then(() => {
+        })
+        .then(() => {
           if (!this.dataForm.id) {
             // 新增
-            this.menuListTreeSetCurrentNode()
+            // this.menuListTreeSetCurrentNode()
           } else {
             if (this.dataForm.id) {
               this.$http({
@@ -188,6 +179,7 @@
               }).then(({data}) => {
                 if (data && data.code === 200) {
                   this.dataForm.parentId = data.column.parentId
+                  this.dataForm.id = data.column.id
                   this.dataForm.name = data.column.name
                   this.dataForm.modelPath = data.column.modelPath
                   this.dataForm.description = data.column.description
@@ -207,11 +199,13 @@
       },
       // 菜单树选中
       menuListTreeCurrentChangeHandle (data, node) {
-        this.dataForm.parentId = data.menuId
+        // console.log(data)
+        this.dataForm.parentId = data.id
         this.dataForm.parentName = data.name
       },
       // 菜单树设置当前选中节点
       menuListTreeSetCurrentNode () {
+        console.log(this.$refs.menuListTree.getCurrentNode())
         this.$refs.menuListTree.setCurrentKey(this.dataForm.parentId)
         this.dataForm.parentName = (this.$refs.menuListTree.getCurrentNode() || {})['name']
       },

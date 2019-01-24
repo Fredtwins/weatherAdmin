@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.name" placeholder="栏目名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -32,24 +32,27 @@
         prop="name"
         header-align="center"
         align="center"
+        width="150"
         label="栏目名称">
       </el-table-column>
       <el-table-column
         prop="parentName"
         header-align="center"
         align="center"
+        width="130"
         label="上级栏目">
       </el-table-column>
       <el-table-column
         prop="jumpType"
         header-align="center"
         align="center"
+        width="150"
         label="跳转类型">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.type === 1" size="small" type="danger">普通目录</el-tag>
-          <el-tag v-if="scope.row.type === 2" size="small" type="danger">a标签</el-tag>
-          <el-tag v-if="scope.row.type === 3" size="small" type="danger">a标签_blank</el-tag>
-          <el-tag v-if="scope.row.type === 4" size="small" type="danger">直接加载url信息</el-tag>
+          <el-tag v-if="scope.row.jumpType === 1" size="small" type="success">普通目录</el-tag>
+          <el-tag v-if="scope.row.jumpType === 2" size="small" type="info">a标签</el-tag>
+          <el-tag v-if="scope.row.jumpType === 3" size="small" type="warning">a标签_blank</el-tag>
+          <el-tag v-if="scope.row.jumpType === 4" size="small" type="danger">直接加载url信息</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -58,11 +61,11 @@
         align="center"
         label="类型">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.type === 1" size="small" type="danger">栏目</el-tag>
-          <el-tag v-if="scope.row.type === 2" size="small" type="danger">文章</el-tag>
-          <el-tag v-if="scope.row.type === 3" size="small" type="danger">图片</el-tag>
+          <el-tag v-if="scope.row.type === 1" size="small" type="success">栏目</el-tag>
+          <el-tag v-if="scope.row.type === 2" size="small" type="info">文章</el-tag>
+          <el-tag v-if="scope.row.type === 3" size="small" type="warning">图片</el-tag>
           <el-tag v-if="scope.row.type === 4" size="small" type="danger">视频</el-tag>
-          <el-tag v-if="scope.row.type === 5" size="small" type="danger">其它</el-tag>
+          <el-tag v-if="scope.row.type === 5" size="small">其它</el-tag>
         </template>
       </el-table-column>
       <!-- <el-table-column
