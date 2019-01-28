@@ -4,35 +4,46 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :inline="true" :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-      <div>
-        <el-form-item label="上级栏目" prop="parentName">
-          <el-popover
-            ref="menuListPopover"
-            placement="bottom-start"
-            trigger="click">
-            <el-tree
-              :data="menuList"
-              :props="menuListTreeProps"
-              node-key="id"
-              ref="menuListTree"
-              @current-change="menuListTreeCurrentChangeHandle"
-              :default-expand-all="true"
-              :highlight-current="true"
-              :expand-on-click-node="false">
-            </el-tree>
-          </el-popover>
-          <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单" class="menu-list__input"></el-input>
-        <!-- <el-input v-model="dataForm.parentId" placeholder="父栏目编号"></el-input> -->
-        </el-form-item>
-        <el-form-item label="栏目名称" prop="name">
-          <el-input v-model="dataForm.name" placeholder="栏目名称"></el-input>
-        </el-form-item>
-      </div>
+      <el-form-item label="上级栏目" prop="parentName">
+        <el-popover
+          ref="menuListPopover"
+          placement="bottom-start"
+          trigger="click">
+          <el-tree
+            :data="menuList"
+            :props="menuListTreeProps"
+            node-key="id"
+            ref="menuListTree"
+            @current-change="menuListTreeCurrentChangeHandle"
+            :default-expand-all="true"
+            :highlight-current="true"
+            :expand-on-click-node="false">
+          </el-tree>
+        </el-popover>
+        <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单" class="menu-list__input"></el-input>
+      <!-- <el-input v-model="dataForm.parentId" placeholder="父栏目编号"></el-input> -->
+      </el-form-item>
+      <el-form-item label="栏目名称" prop="name">
+        <el-input v-model="dataForm.name" placeholder="栏目名称"></el-input>
+      </el-form-item>
+      <el-form-item label="别名">
+        <el-input v-model="dataForm.alias" placeholder="别名"></el-input>
+      </el-form-item>
       <el-form-item label="模板路径">
         <el-input v-model="dataForm.modelPath" placeholder="模板路径"></el-input>
       </el-form-item>
       <el-form-item label="排序">
         <el-input v-model="dataForm.sort" placeholder="排序"></el-input>
+      </el-form-item>
+      <el-form-item label="所属网站">
+        <el-select v-model="dataForm.siteId" placeholder="请选择">
+          <el-option
+            v-for="item in websiteArray"
+            :key="item.index"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="跳转类型" prop="jumpType">
         <el-radio-group v-model="dataForm.jumpType">
@@ -59,9 +70,6 @@
       <el-form-item label="菜单地址">
         <el-input v-model="dataForm.url" placeholder="菜单URL"></el-input>
       </el-form-item>
-      <el-form-item label="所属网站">
-        <el-input v-model="dataForm.siteId" placeholder="网站编号"></el-input>
-      </el-form-item>
       <el-form-item label="描述">
         <el-input v-model="dataForm.description" placeholder="描述"></el-input>
       </el-form-item>
@@ -86,6 +94,7 @@
     data () {
       return {
         visible: false,
+        websitemodel: '',
         dataForm: {
           id: 0,
           parentId: '',
@@ -111,6 +120,7 @@
           children: 'children'
         },
         menuList: [],
+        websiteArray: [],
         dataRule: {
           parentName: [
             { required: true, message: '上级栏目不能为空', trigger: 'change' }
@@ -190,10 +200,25 @@
                   this.dataForm.url = data.column.url
                   this.dataForm.siteId = data.column.siteId
                   this.dataForm.type = data.column.type
+                  this.dataForm.alias = data.column.alias
                   this.menuListTreeSetCurrentNode()
                 }
               })
             }
+          }
+        })
+      },
+      // 下拉框选择
+      websitedSelect () {
+        this.$http({
+          url: this.$http.adornUrl('/cm/website/list'),
+          method: 'get'
+        }).then(({data}) => {
+          console.log(data.page.list)
+          if (data && data.code === 200) {
+            this.websiteArray = data.page.list
+          } else {
+            this.dataList = []
           }
         })
       },
@@ -228,7 +253,8 @@
                 'jumpUrl': this.dataForm.jumpUrl,
                 'url': this.dataForm.url,
                 'siteId': this.dataForm.siteId,
-                'type': this.dataForm.type
+                'type': this.dataForm.type,
+                'alias': this.dataForm.alias
               })
             }).then(({data}) => {
               if (data && data.code === 200) {
@@ -248,6 +274,9 @@
           }
         })
       }
+    },
+    mounted () {
+      this.websitedSelect()
     }
   }
 </script>

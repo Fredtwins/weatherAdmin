@@ -36,6 +36,13 @@
         label="栏目名称">
       </el-table-column>
       <el-table-column
+        prop="alias"
+        header-align="center"
+        align="center"
+        width="150"
+        label="别名">
+      </el-table-column>
+      <el-table-column
         prop="parentName"
         header-align="center"
         align="center"
