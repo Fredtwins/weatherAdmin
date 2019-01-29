@@ -89,6 +89,7 @@
 
 <script>
   import { treeDataTranslate } from '@/utils'
+import { setTimeout } from 'timers'
 
   export default {
     data () {
@@ -126,7 +127,7 @@
             { required: true, message: '上级栏目不能为空', trigger: 'change' }
           ],
           name: [
-            { required: true, message: '栏目名称不能为空', trigger: 'blur' }
+            { required: true, message: '栏目名称不能为空', trigger: 'change' }
           ],
           alias: [
             { required: true, message: '别名（若name是中文则值为其拼音，否则同name）不能为空', trigger: 'blur' }
@@ -172,39 +173,42 @@
           this.menuList = treeDataTranslate(data.columnList, 'id')
         }).then(() => {
           this.visible = true
-          this.$nextTick(() => {
+          // this.$nextTick(() => {
+          //   this.$refs['dataForm'].resetFields()
+          // })
+          setTimeout(() => {
             this.$refs['dataForm'].resetFields()
-          })
+          }, 20)
         })
         .then(() => {
           if (!this.dataForm.id) {
             // 新增
             // this.menuListTreeSetCurrentNode()
           } else {
-            if (this.dataForm.id) {
-              this.$http({
-                url: this.$http.adornUrl(`/cm/column/info/${this.dataForm.id}`),
-                method: 'get',
-                params: this.$http.adornParams()
-              }).then(({data}) => {
-                if (data && data.code === 200) {
-                  this.dataForm.parentId = data.column.parentId
-                  this.dataForm.id = data.column.id
-                  this.dataForm.name = data.column.name
-                  this.dataForm.modelPath = data.column.modelPath
-                  this.dataForm.description = data.column.description
-                  this.dataForm.sort = data.column.sort
-                  this.dataForm.status = data.column.status
-                  this.dataForm.jumpType = data.column.jumpType
-                  this.dataForm.jumpUrl = data.column.jumpUrl
-                  this.dataForm.url = data.column.url
-                  this.dataForm.siteId = data.column.siteId
-                  this.dataForm.type = data.column.type
-                  this.dataForm.alias = data.column.alias
-                  this.menuListTreeSetCurrentNode()
-                }
-              })
-            }
+            // if (this.dataForm.id) {
+            this.$http({
+              url: this.$http.adornUrl(`/cm/column/info/${this.dataForm.id}`),
+              method: 'get',
+              params: this.$http.adornParams()
+            }).then(({data}) => {
+              if (data && data.code === 200) {
+                this.dataForm.parentId = data.column.parentId
+                this.dataForm.id = data.column.id
+                this.dataForm.name = data.column.name
+                this.dataForm.modelPath = data.column.modelPath
+                this.dataForm.description = data.column.description
+                this.dataForm.sort = data.column.sort
+                this.dataForm.status = data.column.status
+                this.dataForm.jumpType = data.column.jumpType
+                this.dataForm.jumpUrl = data.column.jumpUrl
+                this.dataForm.url = data.column.url
+                this.dataForm.siteId = data.column.siteId
+                this.dataForm.type = data.column.type
+                this.dataForm.alias = data.column.alias
+                this.menuListTreeSetCurrentNode()
+              }
+            })
+            // }
           }
         })
       },
@@ -230,7 +234,6 @@
       },
       // 菜单树设置当前选中节点
       menuListTreeSetCurrentNode () {
-        console.log(this.$refs.menuListTree.getCurrentNode())
         this.$refs.menuListTree.setCurrentKey(this.dataForm.parentId)
         this.dataForm.parentName = (this.$refs.menuListTree.getCurrentNode() || {})['name']
       },
