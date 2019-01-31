@@ -89,7 +89,7 @@
 
 <script>
   import { treeDataTranslate } from '@/utils'
-import { setTimeout } from 'timers'
+// import { setTimeout } from 'timers'
 
   export default {
     data () {
@@ -98,7 +98,7 @@ import { setTimeout } from 'timers'
         websitemodel: '',
         dataForm: {
           id: 0,
-          parentId: '',
+          parentId: 0,
           parentName: '',
           name: '',
           alias: '',
@@ -166,26 +166,33 @@ import { setTimeout } from 'timers'
       init (id) {
         this.dataForm.id = id || 0
         this.$http({
+          // url: this.$http.adornUrl('/sys/menu/select'),
           url: this.$http.adornUrl('/cm/column/select'),
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
+          // this.menuList = treeDataTranslate(data.menuList, 'menuId')
           this.menuList = treeDataTranslate(data.columnList, 'id')
         }).then(() => {
           this.visible = true
-          // this.$nextTick(() => {
-          //   this.$refs['dataForm'].resetFields()
-          // })
-          setTimeout(() => {
+          console.log(this.dataForm)
+          this.$nextTick(() => {
             this.$refs['dataForm'].resetFields()
-          }, 20)
+            console.log(123)
+          })
+          // setTimeout(() => {
+          //   this.$refs['dataForm'].resetFields()
+          // }, 20)
         })
         .then(() => {
           if (!this.dataForm.id) {
             // 新增
-            // this.menuListTreeSetCurrentNode()
+            this.menuListTreeSetCurrentNode()
+            // this.$nextTick(() => {
+            //   this.$refs['dataForm'].resetFields()
+            //   console.log(123)
+            // })
           } else {
-            // if (this.dataForm.id) {
             this.$http({
               url: this.$http.adornUrl(`/cm/column/info/${this.dataForm.id}`),
               method: 'get',
@@ -208,7 +215,6 @@ import { setTimeout } from 'timers'
                 this.menuListTreeSetCurrentNode()
               }
             })
-            // }
           }
         })
       },
@@ -218,7 +224,6 @@ import { setTimeout } from 'timers'
           url: this.$http.adornUrl('/cm/website/list'),
           method: 'get'
         }).then(({data}) => {
-          console.log(data.page.list)
           if (data && data.code === 200) {
             this.websiteArray = data.page.list
           } else {
@@ -228,7 +233,6 @@ import { setTimeout } from 'timers'
       },
       // 菜单树选中
       menuListTreeCurrentChangeHandle (data, node) {
-        // console.log(data)
         this.dataForm.parentId = data.id
         this.dataForm.parentName = data.name
       },

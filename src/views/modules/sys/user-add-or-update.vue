@@ -8,7 +8,7 @@
         <el-input v-model="dataForm.userName" placeholder="登录帐号"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password" :class="{ 'is-required': !dataForm.id }">
-        <el-input v-model="dataForm.password" type="password" placeholder="密码"></el-input>
+        <el-input v-model="dataForm.password" type="password" :placeholder="placeword"></el-input>
       </el-form-item>
       <el-form-item label="确认密码" prop="comfirmPassword" :class="{ 'is-required': !dataForm.id }">
         <el-input v-model="dataForm.comfirmPassword" type="password" placeholder="确认密码"></el-input>
@@ -98,6 +98,8 @@
           status: 1,
           organizationId: ''
         },
+        placeword: '密码',
+        orginId: '',
         Arrayname: [],
         dataRule: {
           userName: [
@@ -116,6 +118,9 @@
           mobile: [
             { required: true, message: '手机号不能为空', trigger: 'blur' },
             { validator: validateMobile, trigger: 'blur' }
+          ],
+          roleIdList: [
+            { required: true, message: '角色不能为空', trigger: 'change' }
           ]
         }
       }
@@ -148,6 +153,7 @@
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
+              console.log(data)
               if (data && data.code === 200) {
                 this.dataForm.userName = data.user.username
                 this.dataForm.salt = data.user.salt
@@ -156,6 +162,7 @@
                 this.dataForm.roleIdList = data.user.roleIdList
                 this.dataForm.status = data.user.status
                 this.dataForm.organizationId = data.user.organizationId
+                this.placeword = '若无修改则不填'
               }
             })
           }
@@ -165,7 +172,7 @@
       selectNamechange (val) {
         let index = this.Arrayname.findIndex(item => item.name === val)
         let id = this.Arrayname[index].id
-        this.dataForm.organizationId = id
+        this.orginId = id
       },
       // 表单提交
       dataFormSubmit () {
@@ -183,7 +190,8 @@
                 'mobile': this.dataForm.mobile,
                 'status': this.dataForm.status,
                 'roleIdList': this.dataForm.roleIdList,
-                'organizationId': this.dataForm.organizationId
+                'organizationId': this.orginId,
+                'comfirmPassword': this.dataForm.comfirmPassword
               })
             }).then(({data}) => {
               if (data && data.code === 200) {

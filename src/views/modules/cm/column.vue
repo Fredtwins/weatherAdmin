@@ -8,6 +8,8 @@
         <el-button @click="getDataList()">查询</el-button>
         <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <!-- <el-button v-if="isAuth('cm:column:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('cm:column:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button> -->
       </el-form-item>
     </el-form>
     <el-table
@@ -26,34 +28,28 @@
         prop="id"
         header-align="center"
         align="center"
+        width="55"
         label="编号">
       </el-table-column>
       <el-table-column
         prop="name"
         header-align="center"
         align="center"
-        width="150"
+        width="120"
         label="栏目名称">
-      </el-table-column>
-      <el-table-column
-        prop="alias"
-        header-align="center"
-        align="center"
-        width="150"
-        label="别名">
       </el-table-column>
       <el-table-column
         prop="parentName"
         header-align="center"
         align="center"
-        width="130"
+        width="120"
         label="上级栏目">
       </el-table-column>
       <el-table-column
         prop="jumpType"
         header-align="center"
         align="center"
-        width="150"
+        width="130"
         label="跳转类型">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.jumpType === 1" size="small" type="success">普通目录</el-tag>
@@ -91,6 +87,7 @@
         prop="jumpUrl"
         header-align="center"
         align="center"
+        :show-overflow-tooltip="true"
         label="跳转地址">
       </el-table-column>
       <el-table-column
@@ -109,6 +106,7 @@
         prop="description"
         header-align="center"
         align="center"
+        :show-overflow-tooltip="true"
         label="描述">
       </el-table-column>
       <el-table-column

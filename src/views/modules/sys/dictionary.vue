@@ -6,8 +6,9 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="submitSearch()">查询</el-button>
-        <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('sys:dictionary:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button
+          v-if="isAuth('sys:dictionary:delete')"
           type="danger"
           :disabled="dataListSelections.length <= 0"
           @click="deleteHandle()"

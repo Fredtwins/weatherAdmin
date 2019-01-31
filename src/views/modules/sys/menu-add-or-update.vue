@@ -163,6 +163,7 @@
       },
       // 菜单树选中
       menuListTreeCurrentChangeHandle (data, node) {
+        console.log(data)
         this.dataForm.parentId = data.menuId
         this.dataForm.parentName = data.name
       },
