@@ -20,7 +20,6 @@
             node-key="id"
             ref="menuListTree"
             @current-change="menuListTreeCurrentChangeHandle"
-            :default-expand-all="true"
             :highlight-current="true"
             :expand-on-click-node="false">
           </el-tree>
@@ -184,6 +183,7 @@
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
+          console.log(data)
           this.menuList = treeDataTranslate(data.columnList, 'id')
         }).then(() => {
           this.visible = true
@@ -193,7 +193,7 @@
         }).then(() => {
           if (!this.dataForm.id) {
             // 新增
-            // this.menuListTreeSetCurrentNode()
+            this.menuListTreeSetCurrentNode()
           } else {
             if (this.dataForm.id) {
               this.$http({
@@ -224,7 +224,6 @@
       },
       // 菜单树选中
       menuListTreeCurrentChangeHandle (data, node) {
-        console.log(data)
         this.dataForm.columnId = data.parentId
         this.dataForm.parentName = data.name
       },

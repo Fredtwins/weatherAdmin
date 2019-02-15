@@ -15,7 +15,7 @@
             node-key="id"
             ref="menuListTree"
             @current-change="menuListTreeCurrentChangeHandle"
-            :default-expand-all="true"
+            :default-expand-all="false"
             :highlight-current="true"
             :expand-on-click-node="false">
           </el-tree>
@@ -129,32 +129,11 @@
           name: [
             { required: true, message: '栏目名称不能为空', trigger: 'change' }
           ],
-          alias: [
-            { required: true, message: '别名（若name是中文则值为其拼音，否则同name）不能为空', trigger: 'blur' }
-          ],
-          modelPath: [
-            { required: true, message: '模板路径不能为空', trigger: 'blur' }
-          ],
-          description: [
-            { required: true, message: '描述不能为空', trigger: 'blur' }
-          ],
-          sort: [
-            { required: true, message: '排序不能为空', trigger: 'blur' }
-          ],
           status: [
             { required: true, message: '状态  0：禁用   1：正常不能为空', trigger: 'blur' }
           ],
           jumpType: [
             { required: true, message: '跳转类型 1 普通目录 2 a标签 3 a标签_blank 4 直接加载url信息不能为空', trigger: 'blur' }
-          ],
-          jumpUrl: [
-            { required: true, message: '跳转地址不能为空', trigger: 'blur' }
-          ],
-          url: [
-            { required: true, message: '菜单URL不能为空', trigger: 'blur' }
-          ],
-          siteId: [
-            { required: true, message: '网站编号不能为空', trigger: 'blur' }
           ],
           type: [
             { required: true, message: '类型 1 栏目 2 文章 3 图片 4 视频 5 其它不能为空', trigger: 'blur' }
@@ -171,11 +150,11 @@
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
+          // console.log(data)
           // this.menuList = treeDataTranslate(data.menuList, 'menuId')
           this.menuList = treeDataTranslate(data.columnList, 'id')
         }).then(() => {
           this.visible = true
-          console.log(this.dataForm)
           this.$nextTick(() => {
             this.$refs['dataForm'].resetFields()
             console.log(123)
@@ -188,10 +167,6 @@
           if (!this.dataForm.id) {
             // 新增
             this.menuListTreeSetCurrentNode()
-            // this.$nextTick(() => {
-            //   this.$refs['dataForm'].resetFields()
-            //   console.log(123)
-            // })
           } else {
             this.$http({
               url: this.$http.adornUrl(`/cm/column/info/${this.dataForm.id}`),
