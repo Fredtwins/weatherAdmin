@@ -7,6 +7,16 @@
       <el-form-item label="标题" prop="title">
         <el-input v-model="dataForm.title" placeholder="标题"></el-input>
       </el-form-item>
+      <el-form-item label="发表时间" prop="publishtime">
+        <!-- <el-input v-model="dataForm.publishtime" placeholder="发表时间"></el-input> -->
+        <el-date-picker
+          v-model="dataForm.publishtime"
+          type="date"
+          placeholder="选择日期"
+          width="20"
+          @change="datetimechange">
+        </el-date-picker>
+      </el-form-item>
       <el-form-item label="所属栏目">
       <!-- <el-form-item label="所属栏目" prop="parentName"> -->
         <!-- <el-input v-model="dataForm.columnId" placeholder="栏目编号"></el-input> -->
@@ -26,16 +36,6 @@
         </el-popover>
         <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单" class="menu-list__input"></el-input>
       </el-form-item>
-      <el-form-item label="发表时间" prop="publishtime">
-        <!-- <el-input v-model="dataForm.publishtime" placeholder="发表时间"></el-input> -->
-        <el-date-picker
-          v-model="dataForm.publishtime"
-          type="date"
-          placeholder="选择日期"
-          width="20"
-          @change="datetimechange">
-        </el-date-picker>
-      </el-form-item>
       <el-form-item label="发表者" prop="publisher">
         <el-input v-model="dataForm.publisher" placeholder="发表者"></el-input>
       </el-form-item>
@@ -51,8 +51,14 @@
       <el-form-item label="描述">
         <el-input v-model="dataForm.description" placeholder="描述"></el-input>
       </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-radio-group v-model="dataForm.status">
+          <el-radio :label="0">禁用</el-radio>
+          <el-radio :label="1">正常</el-radio>
+        </el-radio-group>
+      </el-form-item>
     </el-form>
-    <el-form :inline="true" :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+    <el-form :inline="true" :model="dataForm" :rules="dataRule" @keyup.enter.native="dataFormSubmit()" label-width="80px">
       <el-form-item label="浏览次数">
         <el-input v-model="dataForm.browseNum" placeholder="浏览次数"></el-input>
       </el-form-item>
@@ -62,17 +68,13 @@
       <el-form-item label="被赞次数">
         <el-input v-model="dataForm.praiseNum" placeholder="被赞次数"></el-input>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-radio-group v-model="dataForm.status">
-          <el-radio :label="0">禁用</el-radio>
-          <el-radio :label="1">正常</el-radio>
-        </el-radio-group>
-      </el-form-item>
+
     </el-form>
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+    <el-form :model="dataForm" :rules="dataRule" @keyup.enter.native="dataFormSubmit()" label-width="80px">
       <el-form-item label="内容">
         <div class="textarea">
-          <quill-editor v-model="dataForm.content" :options="{placeholder: '请输入'}"></quill-editor>
+          <!-- <quill-editor v-model="dataForm.content" :options="{placeholder: '请输入'}"></quill-editor> -->
+          <UE v-model="dataForm.content" :defaultMsg=defaultMsg :config=config ref="ue"></UE>
         </div>
       </el-form-item>
     </el-form>
@@ -84,11 +86,20 @@
 </template>
 
 <script>
+  import UE from './ue.vue'
   import { timeFilter, treeDataTranslate } from '@/utils'
 
   export default {
+    components: {
+      UE
+    },
     data () {
       return {
+        defaultMsg: '',
+        config: {
+          initialFrameWidth: null,
+          initialFrameHeight: 350
+        },
         visible: false,
         dataForm: {
           id: 0,
@@ -172,21 +183,31 @@
       }
     },
     methods: {
+      // 富文本编辑器
+      getUEContent() {
+        let content = this.$refs.ue.getUEContent();
+        this.$notify({
+          title: '获取成功，可在控制台查看！',
+          message: content,
+          type: 'success'
+        });
+        // console.log(content)
+      },
       // 选择时间
       datetimechange (year) {
         this.dataForm.publishtime = timeFilter(year, 'yyyy-MM-dd')
       },
       init (id) {
         this.dataForm.id = id || 0
+        this.visible = true
         this.$http({
           url: this.$http.adornUrl('/cm/column/select'),
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          console.log(data)
+          // console.log(data)
           this.menuList = treeDataTranslate(data.columnList, 'id')
         }).then(() => {
-          this.visible = true
           this.$nextTick(() => {
             this.$refs['dataForm'].resetFields()
           })
@@ -201,6 +222,7 @@
                 method: 'get',
                 params: this.$http.adornParams()
               }).then(({data}) => {
+                console.log(data)
                 if (data && data.code === 200) {
                   this.dataForm.columnId = data.article.columnId
                   this.dataForm.title = data.article.title
@@ -230,11 +252,14 @@
       // 菜单树设置当前选中节点
       menuListTreeSetCurrentNode () {
         this.$refs.menuListTree.setCurrentKey(this.dataForm.parentId)
+        console.log(this.$refs.menuListTree.getCurrentNode())
+        console.log('------------')
         this.dataForm.parentName = (this.$refs.menuListTree.getCurrentNode() || {})['name']
       },
       // 表单提交
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
+          // console.log(valid)
           if (valid) {
             this.$http({
               url: this.$http.adornUrl(`/cm/article/${!this.dataForm.id ? 'save' : 'update'}`),
@@ -242,6 +267,7 @@
               data: this.$http.adornData({
                 'id': this.dataForm.id || undefined,
                 'columnId': this.dataForm.columnId,
+                'parentName': this.dataForm.parentName,
                 'title': this.dataForm.title,
                 'content': this.dataForm.content,
                 'browseNum': this.dataForm.browseNum,

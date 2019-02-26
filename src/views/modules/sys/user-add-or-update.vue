@@ -153,7 +153,6 @@
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
-              console.log(data)
               if (data && data.code === 200) {
                 this.dataForm.userName = data.user.username
                 this.dataForm.salt = data.user.salt
@@ -162,6 +161,7 @@
                 this.dataForm.roleIdList = data.user.roleIdList
                 this.dataForm.status = data.user.status
                 this.dataForm.organizationId = data.user.organizationId
+                this.orginId = data.user.organizationId
                 this.placeword = '若无修改则不填'
               }
             })
@@ -171,6 +171,7 @@
       // 选中时候触发
       selectNamechange (val) {
         let index = this.Arrayname.findIndex(item => item.name === val)
+        // console.log(index)
         let id = this.Arrayname[index].id
         this.orginId = id
       },
@@ -211,6 +212,9 @@
           }
         })
       }
+    },
+    mounted() {
+
     }
   }
 </script>

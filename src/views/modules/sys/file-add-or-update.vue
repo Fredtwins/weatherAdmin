@@ -102,7 +102,9 @@
         this.uploadUrl = `http://10.0.1.184:8080/mpsp/sys/file/upload?token=${this.$cookie.get('token')}`
       },
       handleRemove (file, fileList) {
-        console.log(file, fileList)
+        console.log(file)
+        console.log('-----------------')
+        console.log(fileList)
       },
       handlePictureCardPreview (file) {
         this.dialogImageUrl = file.url
@@ -132,12 +134,12 @@
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
+              console.log(data)
               if (data && data.code === 200) {
                 this.dataForm.storagePath = data.file.storagePath
                 this.dataForm.size = data.file.size
                 this.dataForm.type = data.file.type
                 this.dataForm.alias = data.file.alias
-                // this.dataForm.createTime = data.file.createTime
                 this.dataForm.description = data.file.description
                 this.dataForm.status = data.file.status
               }
